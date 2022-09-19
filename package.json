@@ -1,0 +1,29 @@
+{
+  "name": "bakeryams",
+  "version": "1.0.0",
+  "description": "jeu concours pour une pâtisserie",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GeoffreyDu/bakeryams.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GeoffreyDu/bakeryams/issues"
+  },
+  "homepage": "https://github.com/GeoffreyDu/bakeryams#readme",
+  "dependencies": {
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "mongoose": "^6.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
