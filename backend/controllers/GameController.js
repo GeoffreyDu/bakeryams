@@ -1,8 +1,9 @@
+import mongoose from "mongoose"
 import { BakeryModel } from "../models/Bakery.js"
 import { EndGameModel } from "../models/EndGame.js"
+import { limit } from '../config/index.js'
 import pastries from "../data/pastries.js"
 import endgame from "../data/endgame.js"
-import mongoose from "mongoose"
 
 // reset the game
 export const resetGame = async(req, res) => {
@@ -21,11 +22,11 @@ export const resetGame = async(req, res) => {
 // start the game
 export const rollTheDice = async(req, res) => {
     try {
-        const hand = [6, 6, 6, 6, 6]
-        // for (let i = 0; i < 5; i++) {
-        //     const num = Math.floor(Math.random() * 6) + 1
-        //     hand.push(num)
-        // }
+        const hand = []
+        for (let i = 0; i < 5; i++) {
+            const num = Math.floor(Math.random() * 6) + 1
+            hand.push(num)
+        }
     
         const occByNumber = countOccByNumber(hand)
         const result = gameResult(occByNumber)
@@ -69,8 +70,7 @@ const gameResult = (occByNumber) => {
 
 // helper to update quantity of pastries (used in actionAfterResult function)
 const updateBakeryQuantity = async(turn) => {
-    const prices = []
-    const date = new Date().toISOString().replace('T', ' ').slice(0, -5)
+    const prices = [new Date().toISOString().replace('T', ' ').slice(0, -5)]
     try {
         const listOfBakeries = await BakeryModel.find({ available: true }, { _id: 0, name: 1 })
         if(listOfBakeries.length < 1){
@@ -79,7 +79,7 @@ const updateBakeryQuantity = async(turn) => {
         for (let index = 0; index < turn; index++) {
             let name = listOfBakeries[Math.floor(Math.random() * listOfBakeries.length)].name
             let elToUpdate = await BakeryModel.find({name})
-            prices.push({ prix: elToUpdate[0].name, date })
+            prices.push(elToUpdate[0].name)
             if(elToUpdate[0].quantity === 0 && listOfBakeries.length > 1) {
                 elToUpdate[0].available = false
                 await elToUpdate[0].save()
@@ -98,15 +98,18 @@ const updateBakeryQuantity = async(turn) => {
 
 // With result make actions corresponding in db
 const actionAfterResult = async(result) => {
-    if (result === 'perdu') return []
+    const end = await EndGameModel.find({ name: 'total' })
+    const rest = limit - end[0].quantity
+    if (result === 'perdu') return { 
+        end: end[0].endgame, prix: []
+     }
     else {
-        const end = await EndGameModel.find({ name: 'total' })
-        if(end[0].quantity >= 50) {
+        if(end[0].quantity >= limit) {
             end[0].endgame = true
             await end[0].save()
-            return end[0].endgame
+            return { end: end[0].endgame, prix: [] }
         }
-        if (result === 'yams') {
+       if (result === 'yams') {
             const prices = await updateBakeryQuantity(3)
             end[0].quantity+=3
             await end[0].save()
