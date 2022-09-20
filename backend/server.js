@@ -7,7 +7,9 @@ import route from './routes/routes.js'
 mongoose.connect( db_url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-}).then(init)
+})
+    .then(init)
+    .catch(err => console.log(err))
 
 function init() {
     const app = express()
