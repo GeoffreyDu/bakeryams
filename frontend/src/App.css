@@ -3,7 +3,7 @@
 }
 
 img {
-  width: 60px;
+  width: 100px;
 }
 
 ul {
@@ -13,5 +13,31 @@ ul {
 
 li {
   font-weight: bold;
+}
+
+.diceImg {
+  margin-right: 10px;
+}
+
+.listItem:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.home {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-image: url('./images/home_banner.jpg');
+  background-position: center;
+  background-size: cover;
+  height: 92vh;
+  color: #fafafa; 
+}
+
+.homeInvite {
+  display: flex;
+  justify-content: center;
+  padding-top: 15px;
+  background-color: black;
 }
 
